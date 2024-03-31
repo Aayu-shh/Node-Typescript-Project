@@ -12,4 +12,4 @@ app.use(todosRoutes);
 app.use((req,res,next)=>{
     res.status(200).json("Seems like you hit the default response, I guess nothing else was hit!");
 });
-app.listen(9090);
+app.listen(9090,"localhost",()=>console.log("Listening to PORT 9090"));
