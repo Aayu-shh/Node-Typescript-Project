@@ -3,6 +3,8 @@ import { Router } from 'express';           //only importing Router that we need
 import { Todo } from '../models/todo';
 
 const router = Router();
+type RequestBodyId = {id:string};
+type RequestBody = {id:string,text:string};
 
 //Below todos list only exist in Memory so will RESET on server restart
 let todos: Todo[] = [];
@@ -12,16 +14,19 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/addToDo', (req,res,next)=>{
+    
+    const body = req.body as RequestBody;
     const newTodo: Todo = {
         id: new Date().toISOString(),
-        text:req.body.text
+        text:body.text
     };
     todos.push(newTodo);
     res.status(201).json({ "Message": "Todo added succesfully","status":"Success" });
 })
 
 router.post('/deleteToDo',(req,res,next)=>{
-    const reqID = req.body.id;
+    const bodyWithID = req.body as RequestBodyId;
+    const reqID = bodyWithID.id;
 
     //logic 2 -- Need more Chnages for comparing array of Objects -- DOESNT work now
     // -- Problem only when Element not found STILL 200 response message is SENT --
@@ -45,8 +50,9 @@ router.post('/deleteToDo',(req,res,next)=>{
 })
 
 router.post('/editToDo', (req, res, next) => {
-    const reqID = req.body.id;
-    const reqText = req.body.text;
+    const body = req.body as RequestBody;
+    const reqID = body.id;
+    const reqText = body.text;
     const todoIndex = todos.findIndex((todoItem)=> reqID===todoItem.id);
     if(todoIndex!=-1)
     {

@@ -8,15 +8,17 @@ router.get('/', (req, res, next) => {
     res.status(200).json({ todos: todos });
 });
 router.post('/addToDo', (req, res, next) => {
+    const body = req.body;
     const newTodo = {
         id: new Date().toISOString(),
-        text: req.body.text
+        text: body.text
     };
     todos.push(newTodo);
     res.status(201).json({ "Message": "Todo added succesfully", "status": "Success" });
 });
 router.post('/deleteToDo', (req, res, next) => {
-    const reqID = req.body.id;
+    const bodyWithID = req.body;
+    const reqID = bodyWithID.id;
     //logic 2 -- Need more Chnages for comparing array of Objects -- DOESNT work now
     // -- Problem only when Element not found STILL 200 response message is SENT --
     // let todos1 = todos.filter((todoitem) => reqID !== todoitem.id);
@@ -38,8 +40,9 @@ router.post('/deleteToDo', (req, res, next) => {
     return res.status(404).json({ "Message": "Seems like nothing was removed", "status": "Failure" });
 });
 router.post('/editToDo', (req, res, next) => {
-    const reqID = req.body.id;
-    const reqText = req.body.text;
+    const body = req.body;
+    const reqID = body.id;
+    const reqText = body.text;
     const todoIndex = todos.findIndex((todoItem) => reqID === todoItem.id);
     if (todoIndex != -1) {
         todos[todoIndex] = { id: reqID, text: reqText };
