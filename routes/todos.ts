@@ -10,7 +10,7 @@ router.get('/', (req, res, next) => {
     res.status(200).json({ todos: todos });
 })
 
-router.post('/todo', (req,res,next)=>{
+router.post('/addToDo', (req,res,next)=>{
     const newTodo: Todo = {
         id: new Date().toISOString(),
         text:req.body.text
@@ -22,11 +22,23 @@ router.post('/todo', (req,res,next)=>{
 router.post('/deleteToDo',(req,res,next)=>{
     const reqID = req.body.id;
     for(let i =0;i<todos.length;i++){
-        if(todos[i].id.includes(reqID)){
+        if(todos[i].id===(reqID)){
             todos.splice(i,1);
             return res.status(200).json({"Message":`The ID: ${reqID} was removed`,"status":"Success"})
         }
     }
     return res.status(404).json({"Message":"Seems like nothing was removed","status":"Failure"})
+})
+
+router.post('/editToDo', (req, res, next) => {
+    const reqID = req.body.id;
+    const reqText = req.body.text;
+    for (let i = 0; i < todos.length; i++) {
+        if (todos[i].id === (reqID)) {
+            todos[i].text = reqText;
+            return res.status(200).json({ "Message": `The text with ToDo ID: ${reqID} was edited`, "status": "Success" })
+        }
+    }
+    return res.status(404).json({ "Message": "Seems like nothing was found to be Edited", "status": "Failure" })
 })
 export default router;
